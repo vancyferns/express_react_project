@@ -96,6 +96,52 @@
     });
   });
 
+app.delete('/places/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+
+  // find index of place
+  const index = places.findIndex(place => place.id === id);
+
+  if (index === -1) {
+    return res.status(404).json({
+      success: false,
+      message: "Place not found"
+    });
+  }
+
+  // remove the place
+  const deleted = places.splice(index, 1);
+
+  res.json({
+    success: true,
+    data: deleted[0],
+    message: "Place deleted successfully!"
+  });
+});
+
+app.put('/places/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const place = places.find(p => p.id === id);
+
+  if (!place) {
+    return res.status(404).json({
+      success: false,
+      message: "Place not found"
+    });
+  }
+
+  // Update fields if provided
+  if (req.body.name !== undefined) place.name = req.body.name;
+  if (req.body.country !== undefined) place.country = req.body.country;
+  if (req.body.description !== undefined) place.description = req.body.description;
+  if (req.body.visited !== undefined) place.visited = req.body.visited;
+
+  res.json({
+    success: true,
+    data: place,
+    message: "Place updated successfully!"
+  });
+});
 
 
 
